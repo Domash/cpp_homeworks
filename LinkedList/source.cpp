@@ -19,10 +19,15 @@ namespace LinkedList {
   template <class T>
   class LinkedList {
   public:
+
+    // constructors & destructor
+
     LinkedList();
     LinkedList(const LinkedList<T>&);
     LinkedList(const LinkedList<T>*);
     ~LinkedList();
+
+    // methods
 
     void print();
     void clear();
@@ -33,10 +38,16 @@ namespace LinkedList {
     size_t size() const;
     bool isEmpty() const;
 
-    Node<T>* front() const;
-
     T& at(int32_t);
     const T& at(int32_t) const;
+
+    // operators
+
+    // friend
+
+    template <class T1> friend void swap(LinkedList<T1>&, LinkedList<T1>&);
+    template <class T1> friend bool operator == (LinkedList<T1>&, LinkedList<T1>&);
+    template <class T1> friend bool operator != (LinkedList<T1>&, LinkedList<T1>&);
 
     /*template <class... Args>
     void emplace_back(Args&&... args) {
@@ -45,6 +56,8 @@ namespace LinkedList {
 
   private:
     Node <T> *_first = nullptr;
+
+    Node<T>* frontNode() const;
   };
 
   template <class T>
@@ -54,7 +67,7 @@ namespace LinkedList {
 
   template <class T>
   LinkedList<T>::LinkedList(const LinkedList<T>& object) {
-    Node<T>* currentNode = object.front();
+    Node<T>* currentNode = object.frontNode();
     while(currentNode != nullptr) {
       this -> add(currentNode -> _value);
       currentNode = currentNode -> _next;
@@ -63,7 +76,7 @@ namespace LinkedList {
 
   template <class T>
   LinkedList<T>::LinkedList(const LinkedList<T>* object) {
-    Node<T>* currentNode = object -> front();
+    Node<T>* currentNode = object -> frontNode();
     while(currentNode != nullptr) {
       this -> add(currentNode -> _value);
       currentNode = currentNode -> _next;
@@ -177,8 +190,24 @@ namespace LinkedList {
   }
 
   template <class T>
-  Node<T>* LinkedList<T>::front() const {
+  Node<T>* LinkedList<T>::frontNode() const {
     return this -> _first;
+  }
+
+  template <class T>
+  bool operator == (LinkedList<T>& object_1, LinkedList<T>& object_2) {
+    if(object_1.size() != object_2.size())
+      return false;
+    for(int32_t i = 1; i <= object_1.size(); ++i) {
+      if(object_1.at(i) != object_2.at(i))
+        return false;
+    }
+    return true;
+  }
+
+  template <class T>
+  bool operator != (LinkedList<T>& object_1, LinkedList<T>& object_2) {
+    return !(object_1 == object_2);
   }
 
 }
@@ -191,6 +220,10 @@ int main() {
 
   list -> add(10);
   list -> add(-20);
+
+  LinkedList<int> *list2 = new LinkedList<int>(list);
+
+  std::cout << (*list != *list2) << std::endl;
 
   list -> print();
 

@@ -43,6 +43,8 @@ namespace LinkedList {
 
     // operators
 
+    LinkedList<T>& operator = (const LinkedList<T>&);
+
     // friend
 
     template <class T1> friend void swap(LinkedList<T1>&, LinkedList<T1>&);
@@ -194,6 +196,17 @@ namespace LinkedList {
     return this -> _first;
   }
 
+  template<class T>
+  LinkedList<T>& LinkedList<T>::operator = (const LinkedList<T>& object) {
+    this -> clear();
+    Node<T>* currentNode = object.frontNode();
+    while(currentNode != nullptr) {
+      this -> add(currentNode -> _value);
+      currentNode = currentNode -> _next;
+    }
+    return *this;
+  }
+
   template <class T>
   bool operator == (LinkedList<T>& object_1, LinkedList<T>& object_2) {
     if(object_1.size() != object_2.size())
@@ -219,29 +232,34 @@ int main() {
   LinkedList<int> *list = new LinkedList<int>();
 
   list -> add(10);
-  list -> add(-20);
+  list -> add(10);
+  list -> add(10);
 
-  LinkedList<int> *list2 = new LinkedList<int>(list);
+  LinkedList<int> *list2 = new LinkedList<int>();
 
-  std::cout << (*list != *list2) << std::endl;
+  list2 -> add(20);
+  list2 -> add(20);
+  list2 -> add(20);
+
+  *list = *list2;
 
   list -> print();
 
   /*LinkedList<int> list;
 
-  std::cout << std::boolalpha << list.isEmpty() << std::endl;
+  //std::cout << std::boolalpha << list.isEmpty() << std::endl;
 
   list.add(10);
   list.add(-20);
 
-  std::cout << list.front() << std::endl;
+  LinkedList<int> list2;
 
-  LinkedList<int> list2(list);
+  list2.add(10);
+  list2.add(111);
+  list2.add(123);
 
-  std::cout << &list << std::endl;
-  std::cout << &list2 << std::endl;
+  list = list2;
 
-  list.remove();
-  list2.print();*/
+  list.print();*/
 
 }

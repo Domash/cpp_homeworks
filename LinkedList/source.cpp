@@ -1,6 +1,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <cstdint>
+#include <utility>
 
 namespace LinkedList {
 
@@ -19,22 +20,31 @@ namespace LinkedList {
   class LinkedList {
   public:
     LinkedList();
+    LinkedList(const LinkedList<T>&);
+    LinkedList(const LinkedList<T>*);
     ~LinkedList();
 
     void print();
     void clear();
 
     bool remove();
-    void add(T value);
+    void add(const T&);
 
     size_t size() const;
     bool isEmpty() const;
 
-    T& at(int32_t index);
-    const T& at(int32_t index) const;
+    Node<T>* front() const;
+
+    T& at(int32_t);
+    const T& at(int32_t) const;
+
+    /*template <class... Args>
+    void emplace_back(Args&&... args) {
+      this -> add(std::move(T({ args... })));
+    }*/
 
   private:
-    Node <T> *_first;
+    Node <T> *_first = nullptr;
   };
 
   template <class T>
@@ -43,12 +53,30 @@ namespace LinkedList {
   }
 
   template <class T>
+  LinkedList<T>::LinkedList(const LinkedList<T>& object) {
+    Node<T>* currentNode = object.front();
+    while(currentNode != nullptr) {
+      this -> add(currentNode -> _value);
+      currentNode = currentNode -> _next;
+    }
+  }
+
+  template <class T>
+  LinkedList<T>::LinkedList(const LinkedList<T>* object) {
+    Node<T>* currentNode = object -> front();
+    while(currentNode != nullptr) {
+      this -> add(currentNode -> _value);
+      currentNode = currentNode -> _next;
+    }
+  }
+
+  template <class T>
   LinkedList<T>::~LinkedList() {
     clear();
   }
 
   template <class T>
-  void LinkedList<T>::add(T value) {
+  void LinkedList<T>::add(const T& value) {
     Node<T> *newNode = new Node<T>(value);
     Node<T> *currentNode = _first;
 
@@ -147,6 +175,12 @@ namespace LinkedList {
     }
     return currentNode -> _value;
   }
+
+  template <class T>
+  Node<T>* LinkedList<T>::front() const {
+    return this -> _first;
+  }
+
 }
 
 using namespace LinkedList;
@@ -155,11 +189,26 @@ int main() {
 
   LinkedList<int> *list = new LinkedList<int>();
 
-  std::cout << std::boolalpha << list -> isEmpty() << std::endl;
-
   list -> add(10);
   list -> add(-20);
 
-  std::cout << list -> at(2) << std::endl;
-  std::cout << list -> at(-1) << std::endl;
+  list -> print();
+
+  /*LinkedList<int> list;
+
+  std::cout << std::boolalpha << list.isEmpty() << std::endl;
+
+  list.add(10);
+  list.add(-20);
+
+  std::cout << list.front() << std::endl;
+
+  LinkedList<int> list2(list);
+
+  std::cout << &list << std::endl;
+  std::cout << &list2 << std::endl;
+
+  list.remove();
+  list2.print();*/
+
 }

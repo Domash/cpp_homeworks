@@ -71,10 +71,3 @@ Thumbs.db
 *.dll
 *.exe
 
-.DS_Store
-.idea
-.vscode/
-*.dSYM
-*.exec
-cmake-build-debug
-cmake-build-debug/
